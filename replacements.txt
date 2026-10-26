@@ -1,1 +1,0 @@
-regex:sk-or-v1-[A-Za-z0-9_-]+==>REDACTED_OPENROUTER_KEY
