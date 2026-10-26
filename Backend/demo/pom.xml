@@ -10,6 +10,7 @@
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>3.2.3</version>
 		<relativePath/>
+
 	</parent>
 
 	<groupId>com.monitoring</groupId>
@@ -30,7 +31,16 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
-
+		<dependency>
+			<groupId>org.eclipse.jgit</groupId>
+			<artifactId>org.eclipse.jgit</artifactId>
+			<version>6.10.0.202406032230-r</version>
+		</dependency>
+		<dependency>
+			<groupId>com.github.javaparser</groupId>
+			<artifactId>javaparser-core</artifactId>
+			<version>3.25.8</version>
+		</dependency>
 		<!-- 2. Spring Boot Actuator (Live CPU/RAM Monitoring) -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -43,6 +53,11 @@
 			<artifactId>javaparser-core</artifactId>
 			<version>3.25.8</version>
 		</dependency>
+		<dependency>
+			<groupId>org.yaml</groupId>
+			<artifactId>snakeyaml</artifactId>
+		</dependency>
+
 
 		<!-- 4. Database Persistence (Hibernate/JPA) -->
 		<dependency>

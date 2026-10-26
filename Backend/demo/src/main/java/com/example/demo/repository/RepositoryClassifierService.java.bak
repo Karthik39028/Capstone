@@ -1,0 +1,201 @@
+package com.example.demo.repository;
+
+import org.springframework.stereotype.Service;
+
+import java.io.File;
+import java.util.Locale;
+
+@Service
+public class RepositoryClassifierService {
+
+    public RepositoryArtifact classify(
+            File file,
+            String relativePath) {
+
+        String fileName = file.getName();
+
+        String lowerName =
+                fileName.toLowerCase(Locale.ROOT);
+
+        String lowerPath =
+                relativePath.toLowerCase(Locale.ROOT);
+
+
+        // =====================================================
+        // APPLICATION SOURCE
+        // =====================================================
+
+        if (lowerName.endsWith(".java")
+                || lowerName.endsWith(".js")
+                || lowerName.endsWith(".jsx")
+                || lowerName.endsWith(".ts")
+                || lowerName.endsWith(".tsx")
+                || lowerName.endsWith(".py")
+                || lowerName.endsWith(".go")
+                || lowerName.endsWith(".cs")
+                || lowerName.endsWith(".cpp")
+                || lowerName.endsWith(".c")) {
+
+            return artifact(
+                    fileName,
+                    relativePath,
+                    ArtifactType.APPLICATION,
+                    "Application source file"
+            );
+        }
+
+
+        // =====================================================
+        // DOCKER / CONTAINER
+        // =====================================================
+
+        if (lowerName.equals("dockerfile")
+                || lowerName.startsWith("dockerfile.")
+                || lowerName.equals("docker-compose.yml")
+                || lowerName.equals("docker-compose.yaml")
+                || lowerName.equals("compose.yml")
+                || lowerName.equals("compose.yaml")) {
+
+            return artifact(
+                    fileName,
+                    relativePath,
+                    ArtifactType.DOCKER,
+                    "Docker/container configuration"
+            );
+        }
+
+
+        // =====================================================
+        // KUBERNETES
+        // =====================================================
+
+        if ((lowerPath.contains("/k8s/")
+                || lowerPath.contains("/kubernetes/")
+                || lowerPath.contains("/manifests/")
+                || lowerPath.startsWith("k8s/")
+                || lowerPath.startsWith("kubernetes/")
+                || lowerPath.startsWith("manifests/"))
+                && (lowerName.endsWith(".yaml")
+                || lowerName.endsWith(".yml"))) {
+
+            return artifact(
+                    fileName,
+                    relativePath,
+                    ArtifactType.KUBERNETES,
+                    "YAML file in Kubernetes-related directory"
+            );
+        }
+
+
+        // =====================================================
+        // TERRAFORM
+        // =====================================================
+
+        if (lowerName.endsWith(".tf")
+                || lowerName.endsWith(".tfvars")) {
+
+            return artifact(
+                    fileName,
+                    relativePath,
+                    ArtifactType.TERRAFORM,
+                    "Terraform configuration"
+            );
+        }
+
+
+        // =====================================================
+        // GITHUB ACTIONS
+        // =====================================================
+
+        if ((lowerPath.contains(".github/workflows/")
+                || lowerPath.startsWith(".github/workflows/"))
+                && (lowerName.endsWith(".yml")
+                || lowerName.endsWith(".yaml"))) {
+
+            return artifact(
+                    fileName,
+                    relativePath,
+                    ArtifactType.CICD,
+                    "GitHub Actions workflow"
+            );
+        }
+
+
+        // =====================================================
+        // JENKINS
+        // =====================================================
+
+        if (lowerName.equals("jenkinsfile")) {
+
+            return artifact(
+                    fileName,
+                    relativePath,
+                    ArtifactType.CICD,
+                    "Jenkins pipeline definition"
+            );
+        }
+
+
+        // =====================================================
+        // DOCUMENTATION
+        // =====================================================
+
+        if (lowerName.equals("readme.md")
+                || lowerName.equals("license")
+                || lowerName.endsWith(".md")) {
+
+            return artifact(
+                    fileName,
+                    relativePath,
+                    ArtifactType.DOCUMENTATION,
+                    "Documentation file"
+            );
+        }
+
+
+        // =====================================================
+        // CONFIGURATION
+        // =====================================================
+
+        if (lowerName.endsWith(".properties")
+                || lowerName.endsWith(".conf")
+                || lowerName.endsWith(".ini")
+                || lowerName.equals(".env")
+                || lowerName.endsWith(".json")) {
+
+            return artifact(
+                    fileName,
+                    relativePath,
+                    ArtifactType.CONFIGURATION,
+                    "Configuration file"
+            );
+        }
+
+
+        // =====================================================
+        // UNKNOWN
+        // =====================================================
+
+        return artifact(
+                fileName,
+                relativePath,
+                ArtifactType.UNKNOWN,
+                "No supported artifact pattern detected"
+        );
+    }
+
+
+    private RepositoryArtifact artifact(
+            String fileName,
+            String path,
+            ArtifactType type,
+            String reason) {
+
+        return new RepositoryArtifact(
+                fileName,
+                path,
+                type,
+                reason
+        );
+    }
+}
